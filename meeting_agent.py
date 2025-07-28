@@ -1,5 +1,5 @@
 import pandas as pd
-#import plotly.graph_objects as go
+import plotly.graph_objects as go
 import streamlit as st
 
 # 데이터 로드 함수
@@ -99,7 +99,7 @@ def plot_meetings_per_week(df):
     meetings_per_week = df.groupby(['year', 'week_number']).size().reset_index(name='meeting_count')
 
     # 3주 이동 평균 적용
-    meetings_per_week['weekly_increase_ma'] = apply_moving_average(meetings_per_week['meeting_count'], window=3)
+    meetings_per_week['weekly_increase_ma'] = apply_moving_average(meetings_per_week['meeting_count'], window=4)
     # 3주 이동 평균 성장률 계산
     meetings_per_week['weekly_increase_ma_growth'] = calculate_growth(meetings_per_week['weekly_increase_ma'])
 
@@ -124,36 +124,36 @@ def plot_meetings_per_week(df):
         x=x_values,
         y=y_values_weekly_increase_ma,
         mode='lines+markers',
-        name="3-Week Moving Average",
-        line=dict(color='rgba(169, 169, 169, 1)', width=2),  # 진한 그레이 색상
-        hovertemplate="Week: %{x}<br>Weekly Count (3-Week MA): %{y}<extra></extra>"
+        name="one month Moving Average",
+        line=dict(color='rgba(255, 99, 71, 0.8)', width=2),  # 진한 그레이 색상
+        hovertemplate="Week: %{x}<br>Weekly Count (1month MA): %{y}<extra></extra>"
     ))
 
-    # 3주 이동 평균 성장률 (Secondary Y Axis)
-    fig.add_trace(go.Scatter(
-        x=x_values,
-        y=y_values_weekly_increase_ma_growth,
-        mode='lines+markers',
-        name="3-Week MA Growth",
-        line=dict(color='rgba(255, 99, 71, 0.8)', width=2),  # 연한 빨강 색상
-        hovertemplate="Week: %{x}<br>MA Growth: %{y}%<extra></extra>",
-        yaxis="y2"  # 2nd y-axis에 적용
-    ))
+    # # 3주 이동 평균 성장률 (Secondary Y Axis)
+    # fig.add_trace(go.Scatter(
+    #     x=x_values,
+    #     y=y_values_weekly_increase_ma_growth,
+    #     mode='lines+markers',
+    #     name="3-Week MA Growth",
+    #     line=dict(color='rgba(255, 99, 71, 0.8)', width=2),  # 연한 빨강 색상
+    #     hovertemplate="Week: %{x}<br>MA Growth: %{y}%<extra></extra>",
+    #     yaxis="y2"  # 2nd y-axis에 적용
+    # ))
 
-    fig.update_layout(
-        title="Weekly Meetings with 3-Week Moving Average and Growth",
-        xaxis_title="Week",
-        yaxis_title="Weekly Meetings",
-        yaxis2=dict(
-            title="3-Week MA Growth (%)",
-            overlaying="y",
-            side="right",
-            showgrid=False,
-            zeroline=False
-        ),
-        hovermode="x unified",
-        xaxis=dict(tickangle=-45)
-    )
+    # fig.update_layout(
+    #     title="Weekly Meetings with 3-Week Moving Average and Growth",
+    #     xaxis_title="Week",
+    #     yaxis_title="Weekly Meetings",
+    #     yaxis2=dict(
+    #         title="3-Week MA Growth (%)",
+    #         overlaying="y",
+    #         side="right",
+    #         showgrid=False,
+    #         zeroline=False
+    #     ),
+    #     hovermode="x unified",
+    #     xaxis=dict(tickangle=-45)
+    # )
 
     st.plotly_chart(fig)
 
